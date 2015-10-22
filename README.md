@@ -2,4 +2,4 @@
 
 Configurable grid cell click game.
 
-#bootstarp JQuery and Javascript based.
+#bootstrap JQuery and Javascript based.
