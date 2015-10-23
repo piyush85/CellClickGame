@@ -31,8 +31,7 @@ var gridGame = window["gridGame"] || {};
         if(this.gridCtrl.getDirtyCellCount() === 0){
             window.clearTimeout(this.counter);
             this.resetGame();
-            $("#alert .modal-body").text("You Won!");
-            $('#alert').modal({backdrop:"static",keyboard:false,show:true});
+            this.notify("You Won!","success")
         }
     }
     game.prototype.gameCounter = function(){
@@ -40,20 +39,40 @@ var gridGame = window["gridGame"] || {};
         oThis.counter = window.setTimeout(function(){
             oThis.timeout = true;
             if(oThis.conf.attempt === oThis.attemptCount){
-                $("#alert .modal-body").text("Game Over");
-                $('#alert').modal({backdrop:"static",keyboard:false,show:true});
+                oThis.notify("Game Over! You Lose","danger");
                 oThis.resetGame.call(oThis);
             }else{
-                var res =  $('#confirm .modal-body').text("Time Over for attempt #"+oThis.attemptCount+", your have #"+(oThis.conf.attempt - oThis.attemptCount)+" remaining tries. Do you want to continue?");
-                $('#confirm').modal({backdrop:"static",keyboard:false,show:true})
-                    .one('click', '#play', function (e) {
-                        oThis.setGame.call(oThis);
-                    })
-                    .one('click', '#quit', function (e) {
-                        oThis.resetGame.call(oThis);
-                    });
+                oThis.notify("Time Over for attempt #"+oThis.attemptCount+", your have #"+(oThis.conf.attempt - oThis.attemptCount)+" remaining tries.","warning");
+                oThis.setGame.call(oThis);
             }
         },oThis.conf.timer*1000)
+    };
+    game.prototype.notify = function(Msg,type){
+        $.notify({
+            message: Msg
+        },{
+            element: 'body',
+            position: null,
+            type: type,
+            placement: {
+                from: "top",
+                align: "center"
+            },
+            offset: 20,
+            spacing: 10,
+            z_index: 1031,
+            delay: 1000,
+            timer: 1000,
+            animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+            },
+            icon_type: 'class',
+            template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+            '<span data-notify="message">{2}</span>' +
+            '</div>'
+        });
     };
     game.prototype.resetGame = function(){
         this.attemptCount = 0;
