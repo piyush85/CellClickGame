@@ -32,7 +32,7 @@ var gridGame = window["gridGame"] || {};
             window.clearTimeout(this.counter);
             this.resetGame();
             $("#alert .modal-body").text("You Won!");
-            $('#alert').modal({backdrop:true,show:true});
+            $('#alert').modal({backdrop:"static",keyboard:false,show:true});
         }
     }
     game.prototype.gameCounter = function(){
@@ -41,11 +41,11 @@ var gridGame = window["gridGame"] || {};
             oThis.timeout = true;
             if(oThis.conf.attempt === oThis.attemptCount){
                 $("#alert .modal-body").text("Game Over");
-                $('#alert').modal({backdrop:true,show:true});
+                $('#alert').modal({backdrop:"static",keyboard:false,show:true});
                 oThis.resetGame.call(oThis);
             }else{
                 var res =  $('#confirm .modal-body').text("Time Over for attempt #"+oThis.attemptCount+", your have #"+(oThis.conf.attempt - oThis.attemptCount)+" remaining tries. Do you want to continue?");
-                $('#confirm').modal({backdrop:true,show:true})
+                $('#confirm').modal({backdrop:"static",keyboard:false,show:true})
                     .one('click', '#play', function (e) {
                         oThis.setGame.call(oThis);
                     })
@@ -53,12 +53,11 @@ var gridGame = window["gridGame"] || {};
                         oThis.resetGame.call(oThis);
                     });
             }
-            oThis.timeout = false;
-
         },oThis.conf.timer*1000)
     };
     game.prototype.resetGame = function(){
         this.attemptCount = 0;
+        this.timeout = false;
         this.gridCtrl.resetCells(this.view.clearCell, this.view);
         this.conf.buttonEl.prop("disabled",false);
     };
@@ -66,6 +65,7 @@ var gridGame = window["gridGame"] || {};
         var oThis = this,
             count = oThis.conf.gameCount - oThis.gridCtrl.getDirtyCellCount();
 
+        oThis.timeout = false;
         oThis.gridCtrl.setCells(count, oThis.view.fillCell, oThis.view);
         oThis.attemptCount++;
         oThis.gameCounter();
