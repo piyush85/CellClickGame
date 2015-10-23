@@ -53,6 +53,7 @@ var gridGame = window["gridGame"] || {};
         },{
             element: 'body',
             position: null,
+            newest_on_top: true,
             type: type,
             placement: {
                 from: "top",
